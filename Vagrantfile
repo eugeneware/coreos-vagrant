@@ -22,9 +22,17 @@ Vagrant.configure("2") do |config|
     f.destination = '/tmp/docker-local.service'
   end
 
+  # Stop the chaos monkey reboots
+  config.vm.provision "file" do |f|
+    f.source = './stop-reboot-manager.service'
+    f.destination = '/tmp/stop-reboot-manager.service'
+  end
+
 $script = <<EOF
-sudo cp /tmp/docker-local.service /media/state/units/
-sudo systemctl link --runtime /media/state/units/docker-local.service
+sudo cp /tmp/*.service /media/state/units/
+sudo systemctl enable --runtime /media/state/units/stop-reboot-manager.service
+sudo systemctl start stop-reboot-manager
+sudo systemctl enable --runtime /media/state/units/docker-local.service
 sudo systemctl start docker-local
 EOF
 

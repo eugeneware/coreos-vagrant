@@ -1,0 +1,9 @@
+[Unit]
+Description=stop update-engine-reboot-manager
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl stop update-engine-reboot-manager
+
+[Install]
+WantedBy=local.target
